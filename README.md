@@ -57,20 +57,46 @@ Run the application:
 python src/main.py
 ```
 
-## API Client
+The application will:
+1. Retrieve meter readings from the API for configured usage points
+2. Process the readings to calculate consumption (VT and MT)
+3. Calculate monthly electricity bills based on pricelist and agreed power
+4. Display detailed billing information
 
-The `ElectricDataAPIClient` class provides the following method:
+## Components
 
-- `get_electric_data(user_id: str)` - Retrieves electric data for a specific user
+### API Client
 
-### Example Usage
+The `ElectricDataAPIClient` class retrieves electric data from the API:
 
 ```python
 from src.api_client import ElectricDataAPIClient
 
 client = ElectricDataAPIClient()
-data = client.get_electric_data("user_123")
-print(data)
+data = client.get_meter_readings(usage_point, reading_type, start_date, end_date)
+```
+
+### Data Processor
+
+The `process_meter_readings` function processes raw API data:
+
+```python
+from src.data_processor import process_meter_readings
+
+processed_data = process_meter_readings(raw_api_response)
+# Returns: {'consumption': float, 'start_date': str, 'end_date': str, ...}
+```
+
+### Bill Calculator
+
+The `ElectricityBillCalculator` class calculates bills from consumption data:
+
+```python
+from src.bill_calculator import ElectricityBillCalculator
+
+calculator = ElectricityBillCalculator()
+bill = calculator.calculate_bill(consumption_vt, consumption_mt, start_date, end_date)
+# Returns detailed bill breakdown including energy costs, network fees, taxes, etc.
 ```
 
 ## Security
@@ -85,13 +111,27 @@ print(data)
 ```
 ElectricityBillCalculator/
 ├── src/
-│   ├── api_client.py      # API client implementation
-│   └── main.py            # Main application entry point
-├── .env.example           # Example environment file
-├── .env                   # Actual environment file (git-ignored)
-├── .gitignore             # Git ignore configuration
-├── requirements.txt       # Python dependencies
-└── README.md              # This file
+│   ├── api_client.py           # API client implementation
+│   ├── bill_calculator.py      # Bill calculation logic
+│   ├── constants.py            # Application constants
+│   ├── data_processor.py       # Data processing utilities
+│   └── main.py                 # Main application entry point
+├── tests/
+│   ├── test_agreed_power.py    # Agreed power tests
+│   ├── test_api_client.py      # API client tests
+│   ├── test_bill_calculation.py # Bill calculation tests
+│   ├── test_data_processor.py  # Data processor tests
+│   ├── test_pricelist.py       # Pricelist tests
+│   └── test_pricelist_date_validation.py # Pricelist date validation tests
+├── data/
+│   ├── agreed_power.json       # Agreed power data
+│   ├── consumption.json        # Consumption data
+│   └── pricelist.json          # Pricing information
+├── .env.example                # Example environment file
+├── .env                        # Actual environment file (git-ignored)
+├── .gitignore                  # Git ignore configuration
+├── requirements.txt            # Python dependencies
+└── README.md                   # This file
 ```
 
 ## Dependencies
