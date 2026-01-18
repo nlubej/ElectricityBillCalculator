@@ -83,7 +83,7 @@ print(data)
 ## Project Structure
 
 ```
-ElectricBilCalculator/
+ElectricityBillCalculator/
 ├── src/
 │   ├── api_client.py      # API client implementation
 │   └── main.py            # Main application entry point
