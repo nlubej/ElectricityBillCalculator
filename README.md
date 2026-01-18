@@ -49,6 +49,16 @@ API_BASE_URL=https://api.example.com
 
 **Important:** Never commit `.env` to version control. The `.gitignore` file already excludes it.
 
+### 5. Configure Data Files
+
+The application uses JSON files in the `data/` directory for bill calculations. You need to fill these files with your custom data:
+
+- **`consumption.json`**: Monthly consumption data for each tariff block (block1-5) and solar electricity usage
+- **`pricelist.json`**: Electricity pricing information including VT/MT tariffs, block prices, and additional costs
+- **`agreed_power.json`**: Agreed power values (in kW) for each tariff block by date range
+
+**Note:** These files contain sample data. Replace with your actual electricity contract details.
+
 ## Usage
 
 Run the application:
