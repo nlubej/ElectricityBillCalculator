@@ -1,0 +1,34 @@
+{
+  "validFrom": "2025-01-01",
+  "validTo": "2025-12-31",
+  "VT": 0.10,
+  "MT": 0.15,
+  "blocks": {
+    "1": {
+      "price": 0.15,
+      "agreedPowerPrice": 0.05
+    },
+    "2": {
+      "price": 0.20,
+      "agreedPowerPrice": 0.06
+    },
+    "3": {
+      "price": 0.25,
+      "agreedPowerPrice": 0.07
+    },
+    "4": {
+      "price": 0.30,
+      "agreedPowerPrice": 0.08
+    },
+    "5": {
+      "price": 0.35,
+      "agreedPowerPrice": 0.09
+    }
+  },
+  "additionalCosts": {
+    "contributions": 0.37,
+    "exciseDuty": 0.62,
+    "monthlyAllowanceCost": 1.99,
+    "discount": 0.18
+  }
+}
