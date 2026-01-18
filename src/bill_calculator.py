@@ -62,7 +62,7 @@ class ElectricityBillCalculator:
         with open(consumption_file, 'r') as f:
             data = json.load(f)
         
-        # Parse consumption into nested dict: {month: {block: amount}}
+        # Parse consumption into nested dict: {month: {block: amount, 'solar': amount}}
         for consumption_entry in data.get('consumption', []):
             month = consumption_entry['month']  # Format: YYYY-MM-DD (first day of month)
             
@@ -74,6 +74,8 @@ class ElectricityBillCalculator:
                 if key.startswith('block'):
                     block_num = int(key.replace('block', ''))
                     self.consumption[month][block_num] = float(value)
+                elif key == 'usedElectricityFromSolar':
+                    self.consumption[month]['solar'] = float(value)
     
     def load_pricelist(self, pricelist_file: str):
         """
@@ -164,6 +166,8 @@ class ElectricityBillCalculator:
                 if key.startswith('block'):
                     block_num = int(key.replace('block', ''))
                     self.consumption[month][block_num] = float(value)
+                elif key == 'usedElectricityFromSolar':
+                    self.consumption[month]['solar'] = float(value)
     
     def is_pricelist_valid_for_date(self, date: str) -> bool:
         """
@@ -270,18 +274,37 @@ class ElectricityBillCalculator:
         # Initialize costs
         energy_vt = 0.0
         energy_mt = 0.0
+        vt_consumption = 0.0
+        mt_consumption = 0.0
         
-        # Calculate VT and MT energy costs from API readings
+        # Extract VT and MT consumption from API readings
         for reading in monthly_data.get('readings', []):
             reading_type = reading.get('readingType')
             consumption = reading.get('consumption', 0.0)
             
             if reading_type == READING_TYPE_VT:
-                # VT consumption * VT price
-                energy_vt = consumption * self.get_tariff_price('VT')
+                vt_consumption = consumption
             elif reading_type == READING_TYPE_MT:
-                # MT consumption * MT price
-                energy_mt = consumption * self.get_tariff_price('MT')
+                mt_consumption = consumption
+        
+        # Get solar electricity for this month
+        month_key = month_date[:7] + '-01'
+        solar_electricity = 0.0
+        if month_key in self.consumption and 'solar' in self.consumption[month_key]:
+            solar_electricity = self.consumption[month_key]['solar']
+        
+        # Distribute solar electricity proportionally to VT and MT
+        total_consumption = vt_consumption + mt_consumption
+        if total_consumption > 0 and solar_electricity > 0:
+            vt_proportion = vt_consumption / total_consumption
+            mt_proportion = mt_consumption / total_consumption
+            
+            vt_consumption += solar_electricity * vt_proportion
+            mt_consumption += solar_electricity * mt_proportion
+        
+        # Calculate VT and MT energy costs
+        energy_vt = vt_consumption * self.get_tariff_price('VT')
+        energy_mt = mt_consumption * self.get_tariff_price('MT')
         
         # Calculate block costs
         block_costs = {}
@@ -299,6 +322,10 @@ class ElectricityBillCalculator:
             
             # Get consumption for this block from consumption.json
             consumption_kwh = self.get_consumption(month_date, block_num)
+            
+            # Add solar electricity to block 1
+            if block_num == 1 and solar_electricity > 0:
+                consumption_kwh += solar_electricity
             
             # Calculate costs - round each before summing
             agreed_power_cost = round(agreed_kw * block_prices['agreedPowerPrice'], 2)

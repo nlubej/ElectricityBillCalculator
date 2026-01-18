@@ -7,7 +7,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-02-01",
@@ -16,7 +16,7 @@
       "block3": 0.26,
       "block4": 0.31,
       "block5": 0.36,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-03-01",
@@ -25,7 +25,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-04-01",
@@ -34,7 +34,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-05-01",
@@ -43,7 +43,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-06-01",
@@ -52,7 +52,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-07-01",
@@ -61,7 +61,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-08-01",
@@ -70,7 +70,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-09-01",
@@ -79,7 +79,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-10-01",
@@ -88,7 +88,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-11-01",
@@ -97,7 +97,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     },
     {
       "month": "2025-12-01",
@@ -106,7 +106,7 @@
       "block3": 0.25,
       "block4": 0.30,
       "block5": 0.35,
-      "UsedElectricityFromSolar": 0.0
+      "usedElectricityFromSolar": 0.0
     }
   ]
 }

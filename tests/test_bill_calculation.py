@@ -53,7 +53,8 @@ def test_bill_calculation_sister():
                 "block2": 147,
                 "block3": 103,
                 "block4": 50,
-                "block5": 0
+                "block5": 0,
+                "usedElectricityFromSolar": 0.0
             }
         ]
     }
@@ -177,7 +178,8 @@ def test_bill_calculation_father():
                 "block2": 89,
                 "block3": 78,
                 "block4": 29,
-                "block5": 0
+                "block5": 0,
+                "usedElectricityFromSolar": 0.0
             }
         ]
     }
@@ -256,6 +258,120 @@ def test_bill_calculation_father():
     print(f"  Total: €{bill['amount']}")
 
 
+def test_bill_with_solar():
+    """Test bill calculation with solar electricity included."""
+    injected_pricelist = {
+        "VT": 0.084,
+        "MT": 0.07,
+        "blocks": {
+            "1": {"price": 0.019580, "agreedPowerPrice": 3.61324},
+            "2": {"price": 0.018440, "agreedPowerPrice": 0.8824},
+            "3": {"price": 0.018370, "agreedPowerPrice": 0.191370},
+            "4": {"price": 0.018380, "agreedPowerPrice": 0.013160},
+            "5": {"price": 0, "agreedPowerPrice": 0}
+        },
+        "additionalCosts": {
+            "contributions": 0.37,
+            "exciseDuty": 0.62,
+            "monthlyAllowanceCost": 1.99,
+            "discount": -0.18
+        }
+    }
+
+    injected_agreed_power = {
+        "agreements": [
+            {
+                "startDate": "2025-01-01",
+                "endDate": "2025-12-31",
+                "block1": 5,
+                "block2": 5.3,
+                "block3": 5.6,
+                "block4": 5.6,
+                "block5": 5.6
+            }
+        ]
+    }
+
+    # Include 50 kWh of solar electricity
+    injected_consumption = {
+        "consumption": [
+            {
+                "month": "2025-01-01",
+                "block1": 105,
+                "block2": 147,
+                "block3": 103,
+                "block4": 50,
+                "block5": 0,
+                "usedElectricityFromSolar": 50.0
+            }
+        ]
+    }
+
+    calculator = ElectricityBillCalculator(
+        consumption_data=injected_consumption,
+        pricelist_data=injected_pricelist,
+        agreed_power_data=injected_agreed_power
+    )
+    
+    # Mock monthly data from API
+    monthly_data = {
+        'readings': [
+            {
+                'readingType': READING_TYPE_VT,
+                'consumption': 154.0  # VT consumption
+            },
+            {
+                'readingType': READING_TYPE_MT,
+                'consumption': 251.0  # MT consumption
+            }
+        ]
+    }
+    
+    # Calculate bill for January 2025
+    bill = calculator.calculate_bill(monthly_data, '2025-01-01')
+    
+    # TEST 1: Verify proportional distribution of solar electricity
+    # With solar: 50 kWh distributed proportionally
+    # Total consumption = 154 + 251 = 405
+    # VT proportion: 154/405 = 0.38024691...
+    # MT proportion: 251/405 = 0.61975308...
+    # VT gets: 154 + (50 * 0.38024691) = 154 + 19.0123 = 173.0123
+    # MT gets: 251 + (50 * 0.61975308) = 251 + 30.9877 = 281.9877
+    
+    # VT: 173.0123 * 0.084 = 14.533 → rounded to 14.53
+    # MT: 281.9877 * 0.07 = 19.739 → rounded to 19.74
+    assert bill['energyVT'] == 14.53, f"Expected VT energy cost to be 14.53, got {bill['energyVT']}"
+    assert bill['energyMT'] == 19.74, f"Expected MT energy cost to be 19.74, got {bill['energyMT']}"
+    
+    # TEST 2: Verify solar electricity is added to block 1
+    # Block 1 should now include solar electricity: 105 + 50 = 155
+    # Block1 consumption cost: 155 * 0.019580 = 3.0349 → rounds to 3.03
+    # Block1 agreed power cost: 5 * 3.61324 = 18.0662 → rounds to 18.07
+    # Block1 total: 3.03 + 18.07 = 21.10
+    assert bill['blockCosts']['block1']['consumptionCost'] == 3.03, f"Expected block1 consumption cost to be 3.03, got {bill['blockCosts']['block1']['consumptionCost']}"
+    assert bill['blockCosts']['block1']['agreedPowerCost'] == 18.07
+    assert bill['blockCosts']['block1']['total'] == 21.10
+    
+    # TEST 3: Verify the calculation is correct compared to no solar
+    # Without solar: VT would be 154*0.084=12.936→12.94, MT would be 251*0.07=17.57
+    # Block1 without solar: 105*0.019580=2.0559→2.06
+    # So the increase should be:
+    # VT increase: 14.53 - 12.94 = 1.59
+    # MT increase: 19.74 - 17.57 = 2.17
+    # Block1 increase: 3.03 - 2.06 = 0.97
+    
+    print(f"✓ Bill calculation with solar electricity test passed")
+    print(f"  Solar electricity: 50 kWh distributed proportionally")
+    print(f"  VT proportion: {154/405:.4f} → VT consumption: {154 + 50*154/405:.2f} kWh")
+    print(f"  MT proportion: {251/405:.4f} → MT consumption: {251 + 50*251/405:.2f} kWh")
+    print(f"  Energy VT (with solar): €{bill['energyVT']}")
+    print(f"  Energy MT (with solar): €{bill['energyMT']}")
+    print(f"  Block 1 consumption (with solar): 155 kWh")
+    print(f"  Block 1 Cost (with solar): €{bill['blockCosts']['block1']['total']}")
+    print(f"  Total: €{bill['amount']}")
+
+
 if __name__ == '__main__':
     test_bill_calculation_sister()
     test_bill_calculation_father()
+    test_bill_with_solar()
