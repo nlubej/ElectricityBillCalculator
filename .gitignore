@@ -26,8 +26,12 @@ wheels/
 
 # Virtual Environment
 venv/
+.venv/
 ENV/
 env/
+
+# Data files
+data/monthly-consumption-by-block/*.csv
 
 # IDE
 .vscode/

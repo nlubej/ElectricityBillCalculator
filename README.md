@@ -13,19 +13,24 @@ A Python application that connects to an API with X-API-KEY authentication to re
 ### 1. Create Virtual Environment
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 
 ### 2. Activate Virtual Environment
 
-**Windows:**
+**Windows (PowerShell):**
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt):**
 ```bash
-venv\Scripts\activate
+.venv\Scripts\activate.bat
 ```
 
 **macOS/Linux:**
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 
 ### 3. Install Dependencies
