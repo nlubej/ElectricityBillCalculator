@@ -358,9 +358,13 @@ class ElectricityBillCalculator:
         # Calculate total from rounded components
         total_amount = energy_vt_rounded + energy_mt_rounded + total_block_cost_rounded + total_additional_rounded
         
+        # Calculate total energy used (VT + MT consumption including solar)
+        total_energy_used = round(vt_consumption + mt_consumption, 2)
+        
         return {
             'energyVT': energy_vt_rounded,
             'energyMT': energy_mt_rounded,
+            'totalEnergyUsed': total_energy_used,
             'blockCosts': block_costs,
             'totalBlockCost': total_block_cost_rounded,
             'additionalCosts': {

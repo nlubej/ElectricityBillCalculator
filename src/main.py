@@ -86,6 +86,7 @@ def main():
         
         for month_name, monthly_bill in bill['monthly_bills'].items():
             print(f"\n{month_name}:")
+            print(f"  Total Energy Used: {monthly_bill['totalEnergyUsed']} kWh")
             print(f"  Energy VT: €{monthly_bill['energyVT']}")
             print(f"  Energy MT: €{monthly_bill['energyMT']}")
             print(f"  Block Costs: €{monthly_bill['totalBlockCost']}")

@@ -3,20 +3,20 @@
     {
       "startDate": "2025-01-01",
       "endDate": "2025-12-31",
-      "block1": 5.0,
-      "block2": 10.0,
-      "block3": 15.0,
-      "block4": 20.0,
-      "block5": 25.0
+      "block1": 6.8,
+      "block2": 6.8,
+      "block3": 6.8,
+      "block4": 6.8,
+      "block5": 6.8
     },
     {
       "startDate": "2026-01-01",
       "endDate": "2026-12-31",
-      "block1": 5.5,
-      "block2": 10.5,
-      "block3": 15.5,
-      "block4": 20.5,
-      "block5": 25.5
+      "block1": 6.8,
+      "block2": 6.8,
+      "block3": 6.8,
+      "block4": 6.8,
+      "block5": 6.8
     }
   ]
 }
